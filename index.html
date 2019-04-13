@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>title</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Train Schedule</h1>
+    </div>
+
+    <div class="container" id="displaySchedule">
+      <table>
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Destination
+          </th>
+          <th>
+            Frequency
+          </th>
+          <th>
+            Next Arrival
+          </th>
+          <th>
+            Minutes away
+          </th>
+        </tr>
+        <tr>
+            <td>sample name</td>
+            <td>sample destination</td>
+            <td>sample train frequency</td>
+            <td>sample next arrival</td>
+            <td>sample minutes away</td>
+        </tr>
+      </table>
+    </div>
+    <div class="container" id="addTrain">
+      <form>
+        <input type="text" id="name" />
+        <input type="text" id="destination" />
+        <input type="time" id="time" />
+        <input type="number" id="frequency" />
+        <button id="submit">Submit</button>
+      </form>
+    </div>
+    <div class="container"></div>
+
+    <div class="container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.0.min.js"
+      integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+      crossorigin="anonymous"
+    ></script>
+    <script src="assets/app.js" type="text/javascript"></script>
+  </body>
+</html>
