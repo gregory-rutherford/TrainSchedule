@@ -22,7 +22,7 @@ $(document).on("click", "#submit", function() {
     var trainTime = $("#time").val().trim();
     var trainFreq = $("#frequency").val().trim();
 
-    database.ref().set({
+    database.ref().push({
         title: trainName,
         place: trainDestination,
         beginTime: trainTime,
@@ -31,8 +31,22 @@ $(document).on("click", "#submit", function() {
 })
 
 
-
+function makeRow(response) {
+  $("#trainDisplay").append(
+    `
+    <tr>
+      <td>${response.title}</td>,
+      <td>${response.place}</td>,
+      <td>${response.beginTime}</td>,
+      <td>${response.frequency}</td>,
+      </tr>
+    `
+  )
+}
 
 
   //update the page so that each entry displays once it is in the db
-
+database.ref().on("child_added", function (childSnapshot) {
+  var response = childSnapshot.val();
+  makeRow(response);
+})
