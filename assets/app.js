@@ -18,39 +18,31 @@ $(document).on("click", "#submit", function() {
     event.preventDefault();
     var trainName = $("#name").val().trim();
     var trainDestination = $("#destination").val().trim();
-
-
-
-
-
-    //grabbing the user submitted time
     var firstTrain = $("#time").val().trim();
-    console.log(firstTrain);
-    //stores the user submitted first train time to a coordinated universal time
-    var trainTime = moment.utc(firstTrain, "HH:mm");
-    console.log(trainTime);
-    //stores the user submitted train frequency in a variable
+    var trainTime = moment(firstTrain, "HH:mm").subtract(1, "years");
     var trainFreq = $("#frequency").val().trim();
-    console.log(trainFreq);
-
-    //adds the frequency to the first train time
-    trainTime.add(trainFreq, "minutes");
-    var updatedTime = trainTime.format("HH:mm");
-    console.log(updatedTime);
     
-    //stores the current time in the matching format as the updated time
-    var currentTime = moment().format("HH:mm");
-    console.log(currentTime);
-    
-    //now you have to add the frequency until the next arrival time is over the current time, once it surpasses it stop adding, then do your calculation for minutes away.  
 
-
+   //current time is represented by "moment()" it finds the difference between the current time and the start train time in minutes 
+   var diffTime = moment().diff(moment(trainTime), "minutes");
+   
+   var trainRemainder = diffTime % trainFreq;
+   
+   var tMinutesTillTrain = trainFreq - trainRemainder;
+   
+   var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+   
+   var nextTrainFormat = nextTrain.format("h:mm a");
+ 
+  
     database.ref().push({
         title: trainName,
         place: trainDestination,
-        beginTime: firstTrain,
-        frequency: trainFreq
+        nextArrival: nextTrainFormat,
+        frequency: trainFreq,
+        mAway: tMinutesTillTrain
     })
+    $('#trainForm')[0].reset();
 })
 
 
@@ -59,8 +51,9 @@ function makeRow(response) {
     ` <tr> 
       <td>${response.title}</td>
       <td>${response.place}</td>
-      <td>${response.beginTime}</td>
+      <td>${response.nextArrival}</td>
       <td>${response.frequency}</td>
+      <td>${response.mAway}</td>
       </tr>
     `
   );
