@@ -11,7 +11,6 @@
 
   var database = firebase.database();
 
-  
 
   //get the data from the from submission   //store the data in firebase
 $(document).on("click", "#submit", function() {
@@ -19,12 +18,14 @@ $(document).on("click", "#submit", function() {
     var trainName = $("#name").val().trim();
     var trainDestination = $("#destination").val().trim();
     var firstTrain = $("#time").val().trim();
-    var trainTime = moment(firstTrain, "HH:mm").subtract(1, "years");
     var trainFreq = $("#frequency").val().trim();
-    
-
    //current time is represented by "moment()" it finds the difference between the current time and the start train time in minutes 
-   var diffTime = moment().diff(moment(trainTime), "minutes");
+  
+   var trainTime = moment(firstTrain, "HH:mm").subtract(1, "years");
+
+   var currentMoment= moment();
+
+   var diffTime = currentMoment.diff(moment(trainTime), "minutes");
    
    var trainRemainder = diffTime % trainFreq;
    
@@ -33,15 +34,17 @@ $(document).on("click", "#submit", function() {
    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
    
    var nextTrainFormat = nextTrain.format("h:mm a");
- 
+   
   
     database.ref().push({
         title: trainName,
         place: trainDestination,
         nextArrival: nextTrainFormat,
         frequency: trainFreq,
-        mAway: tMinutesTillTrain
+        mAway: tMinutesTillTrain,
+        beginTrain: firstTrain
     })
+    //clears the form
     $('#trainForm')[0].reset();
 })
 
@@ -51,17 +54,55 @@ function makeRow(response) {
     ` <tr> 
       <td>${response.title}</td>
       <td>${response.place}</td>
-      <td>${response.nextArrival}</td>
+      <td class="nextArr">${response.nextArrival}</td>
       <td>${response.frequency}</td>
-      <td>${response.mAway}</td>
+      <td class="minAway">${response.mAway}</td>
       </tr>
     `
   );
 }
 
-
   //update the page so that each entry displays once it is in the db
 database.ref().on("child_added", function (childSnapshot) {
   var response = childSnapshot.val();
   makeRow(response);
+  
+  // update the variables so that it updates every 60 seconds using set interval
+  var trainTime = response.beginTrain;
+    console.log(trainTime);
+  
 })
+
+
+
+
+
+
+function updateDb() {
+  database.ref().on("value", function(snapshot){
+  var trainTime = snapshot.val().beginTrain;
+    console.log(trainTime);
+  var diffTime = moment().diff(moment(trainTime), "minutes");
+  
+  var trainFreq = snapshot.val().frequency;
+    console.log(trainFreq);
+  var trainRemainder = diffTime % trainFreq;
+  
+  var tMinutesTillTrain = trainFreq - trainRemainder;
+  
+  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+  
+  var nextTrainFormat = nextTrain.format("h:mm a");
+  
+  database.ref().update({
+    nextArrival: nextTrainFormat,
+    mAway: tMinutesTillTrain
+  })
+}, function(errorObject) {
+  console.log("errors handled" + errorObject.code);
+}
+  )}
+
+  setInterval(updateDb, 5000); 
+
+
