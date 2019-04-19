@@ -14,6 +14,8 @@ var database = firebase.database();
 //get the data from the from submission   //store the data in firebase
 $(document).on("click", "#submit", function() {
   event.preventDefault();
+  
+  
   var trainName = $("#name")
     .val()
     .trim();
@@ -53,11 +55,11 @@ $(document).on("click", "#submit", function() {
   //clears the form
   $("#trainForm")[0].reset();
 });
-
+// displaying firebase data on the page
 function makeRow(response) {
   $("#trainDisplay").append(
-    ` <tr> 
-      <td>${response.title}</td>
+    ` <tr>
+      <td id = "title">${response.title}</td>
       <td>${response.place}</td>
       <td class="nextArr">${response.nextArrival}</td>
       <td>${response.frequency}</td>
@@ -67,48 +69,8 @@ function makeRow(response) {
   );
 }
 
-//update the page so that each entry displays once it is in the db
+//grabbing the response snapshot from fb
 database.ref().on("child_added", function(childSnapshot) {
   var response = childSnapshot.val();
   makeRow(response);
 });
-
-  // update the variables so that it updates every 60 seconds using set interval
-//   var trainTime = response.beginTrain;
-//   console.log(trainTime);
-// });
-
-// function updateDb() {
-//   database.ref().on(
-//     "value",
-//     function(snapshot) {
-//       var values = Object.values(snapshot.val());
-//       console.log(values);
-//       values.forEach(function(train) {
-//         var trainTime = train.beginTrain;
-//         console.log(trainTime);
-//         var diffTime = (moment().format("HH:mm").unix() - moment(trainTime, "HH:mm").unix()) / 600;
-//         console.log(diffTime);
-//         var trainFreq = train.frequency;
-//         console.log(trainFreq);
-//         var trainRemainder = diffTime % trainFreq;
-//         console.log(trainRemainder);
-//         var tMinutesTillTrain = trainFreq - trainRemainder;
-//         console.log(tMinutesTillTrain);
-//         var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-
-//         var nextTrainFormat = nextTrain.format("h:mm a");
- 
-//         database.ref().set({
-//           nextArrival: nextTrainFormat,
-//           mAway: tMinutesTillTrain
-//         });
-//       });
-//     },
-//     function(errorObject) {
-//       console.log("errors handled" + errorObject.code);
-//     }
-//   );
-// }
-
-// setInterval(updateDb, 5000);

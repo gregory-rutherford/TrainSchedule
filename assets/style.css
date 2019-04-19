@@ -1,0 +1,35 @@
+
+ 
+h1 {
+    text-align: center !important;
+    font-family: 'Muli', sans-serif;
+    font-weight: 700;
+}
+
+body {
+    font-family: 'Muli', sans-serif;
+    font-weight: 400;
+}
+
+#displaySchedule {
+    padding-left: 120px !important;
+    padding-right: 120px !important;
+    padding-bottom: 40px !important;
+}
+
+p {
+    font-family: 'Muli', sans-serif;
+    font-weight: 300;
+}
+
+.jumbotron {
+    background: rgb(230, 222, 110) !important;
+    margin-left: 120px !important;
+    margin-right: 120px !important;
+}
+
+@media (max-width: 433px) {
+    h1 {
+        font-size: 18px !important;
+    }
+}
